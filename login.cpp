@@ -57,6 +57,7 @@ std::string findUser(string user){
         return "User not found";
 
     }
+    return 0;
 }
 
 int main()
