@@ -66,17 +66,19 @@ int main()
     // unsigned char hash[SHA256_DIGEST_LENGTH];
     // cout << SHA256(text, len, hash) << endl;
     bool auth = false;
-    string storedPass = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    //string storedPass = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
     string user;
     string pass;
     string test;
+    string hash;
     user = getUser();
     test = findUser(user);
-    cout << test << endl;
+    hash = test.substr(test.find(':')+1);
+    //cout << hash;
     pass = getPassword();
-    cout << sha256(pass) << endl;
+    //cout << sha256(pass) << endl;
     
-    if(storedPass == sha256(pass)){
+    if(hash == sha256(pass)){
         authenticated(user);
     }else{
         rejected(user);
