@@ -6,20 +6,16 @@
 #include <fstream>
 #include "authlib.h"
 #include <openssl/sha.h>
+#include <openssl/evp.h>
 
-// unsigned char text[] = "Test String";
-// unsigned int len = std::strlen((const char *)text);
-// unsigned char hash[SHA256_DIGEST_LENGTH];
 using namespace std;
 
-std::string sha256(const std::string str)
+//Using the openssl 3.0 function SHA256, because it takes const unsigned char[] arguments instead of strings, the pass string is typecasted
+std::string sha256(string pass)
 {
-    // This is deprecated but the other method doesnt work
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, str.c_str(), str.size());
-    SHA256_Final(hash, &sha256);
+    unsigned int len = strlen ((const char *)pass.c_str());
+    unsigned char hash [SHA256_DIGEST_LENGTH];
+    SHA256((const unsigned char *)pass.c_str(), len, hash);
     stringstream ss;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
     {
@@ -36,10 +32,10 @@ std::string getUser()
     return User;
 }
 
-std::string getPassword()
+string getPassword()
 {
     cout << "Enter your password: ";
-    std::string Pass;
+    string Pass;
     cin >> Pass;
     return Pass;
 }
@@ -62,23 +58,13 @@ std::string findUser(string user){
 
 int main()
 {
-    // unsigned char text[] = "Test String";
-    // unsigned int len = strlen((const char *)text);
-    // unsigned char hash[SHA256_DIGEST_LENGTH];
-    // cout << SHA256(text, len, hash) << endl;
-    //string storedPass = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
-    string user;
-    string pass;
-    string test;
-    string hash;
+    bool auth = false;
+    string user,test,hash,pass;
     user = getUser();
+    pass = getPassword();
     test = findUser(user);
     hash = test.substr(test.find(':')+1);
-    //cout << hash;
-    pass = getPassword();
-    //cout << sha256(pass) << endl;
-    
-    if(hash == sha256(pass)){
+    if(sha256(pass) == hash){
         authenticated(user);
     }else{
         rejected(user);
