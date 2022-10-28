@@ -10,11 +10,13 @@
 
 using namespace std;
 
-//Using the openssl 3.0 function SHA256, because it takes const unsigned char[] arguments instead of strings, the pass string is typecasted
-std::string sha256(string pass)
+/**
+ * Using the openssl 3.0 function SHA256, because it takes const unsigned char[] arguments instead of strings, the pass string is typecasted
+ */
+string sha256(string pass)
 {
-    unsigned int len = strlen ((const char *)pass.c_str());
-    unsigned char hash [SHA256_DIGEST_LENGTH];
+    unsigned int len = strlen((const char *)pass.c_str());
+    unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256((const unsigned char *)pass.c_str(), len, hash);
     stringstream ss;
     for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
@@ -24,7 +26,7 @@ std::string sha256(string pass)
     return ss.str();
 }
 
-std::string getUser()
+string getUser()
 {
     cout << "Enter you username: ";
     std::string User;
@@ -40,18 +42,21 @@ string getPassword()
     return Pass;
 }
 
-std::string findUser(string user){
+string findUser(string user)
+{
     ifstream file;
     string line;
     file.open("passwords.txt");
-    if(file.is_open()){
-        while(getline(file, line)){
-            if(line.find(user) != std::string::npos ){
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            if (line.find(user) != std::string::npos)
+            {
                 return line;
             }
         }
         return "User not found";
-
     }
     return 0;
 }
@@ -59,16 +64,17 @@ std::string findUser(string user){
 int main()
 {
     bool auth = false;
-    string user,test,hash,pass;
+    string user, test, hash, pass;
     user = getUser();
     pass = getPassword();
     test = findUser(user);
-    hash = test.substr(test.find(':')+1);
-    if(sha256(pass) == hash){
+    hash = test.substr(test.find(':') + 1);
+    if (sha256(pass) == hash)
+    {
         authenticated(user);
-    }else{
+    }
+    else
+    {
         rejected(user);
     }
-
-
 }
