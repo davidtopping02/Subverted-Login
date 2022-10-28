@@ -53,7 +53,7 @@ string findUser(string user)
         {
             if (line.find(user) != std::string::npos)
             {
-                return line;
+                return line.substr(line.find(':') + 1);;
             }
         }
         return "User not found";
@@ -64,12 +64,12 @@ string findUser(string user)
 int main()
 {
     bool auth = false;
-    string user, test, hash, pass;
+    string user,storedHash, pass, userLine;
     user = getUser();
     pass = getPassword();
-    test = findUser(user);
-    hash = test.substr(test.find(':') + 1);
-    if (sha256(pass) == hash)
+    storedHash = findUser(user);
+ 
+    if (sha256(pass) == storedHash)
     {
         authenticated(user);
     }
