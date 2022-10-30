@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
             exit(0);
         }
 
-        // gets password- passes in the vars for a backdoor
+        // gets password- checks for invalid chars
         getPassword(pass_ptr, argc, argv[3], storedHash);
 
         // reject if wrong password entered
