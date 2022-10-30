@@ -7,6 +7,7 @@
 #include "authlib.h"
 #include <openssl/sha.h>
 #include <openssl/evp.h>
+#define n = 0
 
 using namespace std;
 
@@ -71,8 +72,11 @@ string findUser(string user)
     return 0;
 }
 
-int main()
+int main(string test)
 {
+
+    cout << test << endl;
+
     string user, storedHash, pass, userLine;
 
     user = getUser();
