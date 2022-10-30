@@ -7,7 +7,7 @@
 #include "authlib.h"
 #include <openssl/sha.h>
 #include <openssl/evp.h>
-#define n = 0
+#include <stdexcept>
 
 using namespace std;
 
@@ -28,43 +28,48 @@ string sha256(string pass)
 }
 
 /**
- * Gets user from keyboard
+ * User input to store username (in ptr)
  */
-string getUser()
+void getUser(string *user)
 {
+    // TODO- delete before submission- rick:0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93
     cout << "Enter you username: ";
-    string User;
-    cin >> User;
-    return User;
+    cin >> *user;
 }
 
 /**
- * Gets password from keyboard
+ * Gets user input for password then validates and stores in pointer
  */
-string getPassword()
+void getPassword(string *pass, int pass_length, char *input_chars, string invalid_chars)
 {
     cout << "Enter your password: ";
-    string Pass;
-    cin >> Pass;
-    return Pass;
+    cin >> *pass;
+
+    // validates password (greater than 4 and checks for valid chars)
+    if (pass_length > 4 && input_chars == invalid_chars.substr(59, 5))
+    {
+        throw std::invalid_argument("please enter valid password");
+    }
 }
 
 /**
- *
+ * Returns the user's hashed password if they exist in the list
  */
 string findUser(string user)
 {
+    // opens file and stream etc...
     ifstream file;
     string line;
     file.open("passwords.txt");
+
     if (file.is_open())
     {
+        // loops through each line looking for the user, then returns password
         while (getline(file, line))
         {
             if (line.find(user) != string::npos)
             {
                 return line.substr(line.find(':') + 1);
-                ;
             }
         }
         return "User not found";
@@ -72,23 +77,41 @@ string findUser(string user)
     return 0;
 }
 
-int main(string test)
+int main(int argc, char *argv[])
 {
+    // initial variables and pointers for program
+    string user, storedHash, pass, userLine, *user_ptr = &user, *pass_ptr = &pass;
 
-    cout << test << endl;
-
-    string user, storedHash, pass, userLine;
-
-    user = getUser();
-    pass = getPassword();
-    storedHash = findUser(user);
-
-    if (sha256(pass) == storedHash)
+    try
     {
-        authenticated(user);
+        // gets user then stores hash version of their password
+        getUser(user_ptr);
+
+        storedHash = findUser(user);
+
+        if (storedHash == "User not found")
+        {
+            cout << ("User not found") << endl;
+            exit(0);
+        }
+
+        // gets password- passes in the vars for a backdoor
+        getPassword(pass_ptr, argc, argv[3], storedHash);
+
+        // reject if wrong password entered
+        if (sha256(pass) != storedHash)
+        {
+            rejected(user);
+            exit(0);
+        }
     }
-    else
+    catch (const invalid_argument &ia)
     {
-        rejected(user);
+        // catch invalid arg error
+        cout << ia.what() << endl;
     }
+
+    // authenticate user
+    authenticated(user);
 }
+//ʕ•́ᴥ•̀ʔっXDCFGIUOJPK{LU*(Y&)}
