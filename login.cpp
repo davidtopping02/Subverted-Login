@@ -27,43 +27,24 @@ string sha256(string pass)
 }
 
 /**
- * Gets user from keyboard
- */
-string getUser()
-{
-    cout << "Enter you username: ";
-    string User;
-    cin >> User;
-    return User;
-}
-
-/**
- * Gets password from keyboard
- */
-string getPassword()
-{
-    cout << "Enter your password: ";
-    string Pass;
-    cin >> Pass;
-    return Pass;
-}
-
-/**
- *
+ * Finds hash from password file based on user name
  */
 string findUser(string user)
 {
+    // inits file stream
     ifstream file;
     string line;
+
+    // opens password file
     file.open("passwords.txt");
     if (file.is_open())
     {
+        // loops through each line looking for the user, then returns password if user found
         while (getline(file, line))
         {
             if (line.find(user) != string::npos)
             {
                 return line.substr(line.find(':') + 1);
-                ;
             }
         }
         return "User not found";
@@ -71,14 +52,20 @@ string findUser(string user)
     return 0;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    string user, storedHash, pass, userLine;
 
-    user = getUser();
-    pass = getPassword();
+    // exit if username AND password are not entered
+    if (argc != 3)
+    {
+        exit(0);
+    }
+    string user(argv[1]), storedHash, pass(argv[2]), userLine;
+
+    // gets hash of password for user
     storedHash = findUser(user);
 
+    // authentification process
     if (sha256(pass) == storedHash)
     {
         authenticated(user);
