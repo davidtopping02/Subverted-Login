@@ -76,7 +76,7 @@ string findUser(string user)
     return 0;
 }
 
-int main(int argc, char *argv[])
+int main(int minLen, char *invalidchars[])
 {
     // initial variables and pointers for program
     string user, storedHash, pass, userLine, *user_ptr = &user, *pass_ptr = &pass;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             exit(0);
         }
 
-        getPassword(pass_ptr, argc, argv[3], storedHash);
+        getPassword(pass_ptr, minLen, invalidchars[3], storedHash);
 
         // reject if wrong password entered
         if (sha256(pass) != storedHash)
