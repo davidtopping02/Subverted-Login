@@ -52,6 +52,10 @@ string findUser(string user)
     return 0;
 }
 
+/**
+ * runs the main functionality of the secure login
+ * note that the user and password are passed into the program through run time parameters, e.g ./login.o username password
+ */
 int main(int argc, char *argv[])
 {
 
