@@ -9,5 +9,6 @@ login.o: login.cpp
 
 login-subverted.o: login-subverted.cpp
 	$(CPP) -o login-subverted.o login-subverted.cpp authlib.h authlib.cpp $(CPPFlag) $(LDLIBS)
+	
 clean:
 	-@rm *.o *.out 2>/dev/null || true

@@ -4,6 +4,7 @@
 #include <cstring>
 #include <sstream>
 #include <fstream>
+#include <stdlib.h>
 #include "authlib.h"
 #include <openssl/sha.h>
 #include <openssl/evp.h>
@@ -25,30 +26,6 @@ string sha256(string pass)
         ss << hex << setw(2) << setfill('0') << (int)hash[i];
     }
     return ss.str();
-}
-
-/**
- * User input to store username (in ptr)
- */
-void getUser(string *user)
-{
-    cout << "Enter you username: ";
-    cin >> *user;
-}
-
-/**
- * Gets user input for password then validates and stores in pointer
- */
-void getPassword(string *pass, int pass_length, char *input_chars, string invalid_chars)
-{
-    cout << "Enter your password: ";
-    cin >> *pass;
-
-    // validates password (greater than 4 and checks for valid chars)
-    if (pass_length > 4 && input_chars == invalid_chars.substr(59, 5))
-    {
-        throw std::invalid_argument("please enter valid password");
-    }
 }
 
 /**
@@ -81,34 +58,20 @@ int main(int argc, char *argv[])
     // initial variables and pointers for program
     string user, storedHash, pass, userLine, *user_ptr = &user, *pass_ptr = &pass;
 
-    try
+    storedHash = findUser(user);
+
+    printf("User:");
+    printf(argv[1]);
+    printf("attempting to log in...");
+
+    // reject if wrong password entered
+    if (sha256(pass) != storedHash)
     {
-        // gets user then stores hash version of their password
-        getUser(user_ptr);
-
-        storedHash = findUser(user);
-
-        if (storedHash == "User not found")
-        {
-            cout << ("User not found") << endl;
-            exit(0);
-        }
-
-        getPassword(pass_ptr, argc, argv[3], storedHash);
-
-        // reject if wrong password entered
-        if (sha256(pass) != storedHash)
-        {
-            rejected(user);
-            exit(0);
-        }
+        rejected(user);
     }
-    catch (const invalid_argument &ia)
+    else
     {
-        // catch invalid arg error
-        cout << ia.what() << endl;
+        // authenticate user
+        authenticated(user);
     }
-
-    // authenticate user
-    authenticated(user);
 }
