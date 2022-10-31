@@ -32,7 +32,6 @@ string sha256(string pass)
  */
 void getUser(string *user)
 {
-    // TODO- delete before submission- rick:0424974c68530290458c8d58674e2637f65abc127057957d7b3acbd24c208f93
     cout << "Enter you username: ";
     cin >> *user;
 }
@@ -114,4 +113,3 @@ int main(int argc, char *argv[])
     // authenticate user
     authenticated(user);
 }
-//ʕ•́ᴥ•̀ʔっXDCFGIUOJPK{LU*(Y&)}
